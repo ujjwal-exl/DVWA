@@ -13,7 +13,7 @@ header ("X-XSS-Protection: 0");
 <?php
 if (isset ($_POST['include'])) {
 $page[ 'body' ] .= "
-	" . $_POST['include'] . "
+	" . htmlspecialchars( $_POST['include'], ENT_QUOTES | ENT_HTML5, 'UTF-8' ) . "
 ";
 }
 $page[ 'body' ] .= '

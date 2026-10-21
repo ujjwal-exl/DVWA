@@ -60,6 +60,10 @@ if (array_key_exists ("id", $_GET) && array_key_exists ("security", $_GET)) {
 			$vuln = "Unknown Vulnerability";
 	}
 
+	if( !preg_match( '/^[A-Za-z0-9_]+$/', (string) $id ) || !in_array( $security, array( 'low', 'medium', 'high', 'impossible' ), true ) ) {
+		die( 'Invalid source request.' );
+	}
+
 	$source = @file_get_contents( DVWA_WEB_PAGE_TO_ROOT . "vulnerabilities/{$id}/source/{$security}.php" );
 	$source = str_replace( array( '$html .=' ), array( 'echo' ), $source );
 

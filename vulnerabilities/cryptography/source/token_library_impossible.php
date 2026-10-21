@@ -1,6 +1,10 @@
 <?php
 
-define ("KEY", "rainbowclimbinghigh");
+$rawKey = base64_decode ((string) getenv ('TOKEN_KEY_B64'), true);
+if ($rawKey === false || strlen ($rawKey) !== 32) {
+	throw new RuntimeException ("TOKEN_KEY_B64 must be a base64-encoded 32-byte key");
+}
+define ("KEY", $rawKey);
 define ("ALGO", "aes-256-gcm");
 
 function encrypt ($plaintext, $iv) {

@@ -82,10 +82,13 @@ class HealthController
 	
 	private function checkConnectivity() {
 		$input = (array) json_decode(file_get_contents('php://input'), TRUE);
-		if (array_key_exists ("target", $input)) {
+		if (array_key_exists ("target", $input)
+			&& is_string ($input['target'])
+			&& (filter_var ($input['target'], FILTER_VALIDATE_IP) !== false
+				|| preg_match ('/^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*$/', $input['target']) === 1)) {
 			$target = $input['target'];
 
-			exec ("ping -c 4 " . $target, $output, $ret_var);
+			exec ("ping -c 4 " . escapeshellarg ($target), $output, $ret_var);
 
 			if ($ret_var == 0) {
 				$response['status_code_header'] = 'HTTP/1.1 200 OK';

@@ -1,12 +1,12 @@
 <?php
 
-if( isset( $_GET[ 'Login' ] ) ) {
+if( isset( $_POST[ 'Login' ] ) ) {
 	// Sanitise username input
-	$user = $_GET[ 'username' ];
+	$user = $_POST[ 'username' ];
 	$user = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $user ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));
 
 	// Sanitise password input
-	$pass = $_GET[ 'password' ];
+	$pass = $_POST[ 'password' ];
 	$pass = ((isset($GLOBALS["___mysqli_ston"]) && is_object($GLOBALS["___mysqli_ston"])) ? mysqli_real_escape_string($GLOBALS["___mysqli_ston"],  $pass ) : ((trigger_error("[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.", E_USER_ERROR)) ? "" : ""));
 	$pass = md5( $pass );
 
@@ -20,8 +20,8 @@ if( isset( $_GET[ 'Login' ] ) ) {
 		$avatar = $row["avatar"];
 
 		// Login successful
-		$html .= "<p>Welcome to the password protected area {$user}</p>";
-		$html .= "<img src=\"{$avatar}\" />";
+		$html .= "<p>Welcome to the password protected area " . htmlspecialchars( $user, ENT_QUOTES, 'UTF-8' ) . "</p>";
+		$html .= "<img src=\"" . htmlspecialchars( $avatar, ENT_QUOTES, 'UTF-8' ) . "\" />";
 	}
 	else {
 		// Login failed

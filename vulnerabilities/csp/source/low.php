@@ -10,9 +10,13 @@ header($headerCSP);
 
 ?>
 <?php
-if (isset ($_POST['include'])) {
+$allowedScripts = array(
+	// Populate with the exact, fully-qualified script URLs this page legitimately needs.
+	// Never list publicly writable hosts (pastebin, hastebin, cdn.jsdelivr.net/gh, unpkg, ...).
+);
+if (isset ($_POST['include']) && is_string($_POST['include']) && in_array($_POST['include'], $allowedScripts, true)) {
 $page[ 'body' ] .= "
-	<script src='" . $_POST['include'] . "'></script>
+	<script src='" . htmlspecialchars($_POST['include'], ENT_QUOTES, 'UTF-8') . "'></script>
 ";
 }
 $page[ 'body' ] .= '

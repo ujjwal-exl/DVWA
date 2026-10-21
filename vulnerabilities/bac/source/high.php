@@ -37,10 +37,10 @@ if (isset($_GET['action']) && isset($_GET['user_id'])) {
             $html .= "<p>No user found with ID: {$id}</p>";
         } else {
             // "Secure" session-based check (but vulnerable to session fixation)
-            if (isset($_SESSION['user_id'])) {
-                $session_id = intval($_SESSION['user_id']);
+            if (isset($current_user_id)) {
+                $session_id = intval($current_user_id);
 
-                if ($id == $session_id) {
+                if ($id === $session_id) {
                     // Access granted - using prepared statement
                     $query = "SELECT first_name, last_name, user_id, avatar FROM users WHERE user_id = ?";
                     $stmt = mysqli_prepare($GLOBALS["___mysqli_ston"], $query);

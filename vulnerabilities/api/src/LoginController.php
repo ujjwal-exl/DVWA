@@ -83,7 +83,11 @@ class LoginController
 			$client_secret = $_SERVER['PHP_AUTH_PW'];
 
 			# App auth check
-			if ($client_id == "1471.dvwa.digi.ninja" && $client_secret == "ABigLongSecret") {
+			$expectedId = getenv('OAUTH_CLIENT_ID');
+			$expectedSecretHash = getenv('OAUTH_CLIENT_SECRET_HASH');
+			if ($expectedId !== false && $expectedId !== '' && $expectedSecretHash !== false && $expectedSecretHash !== '' &&
+				hash_equals($expectedId, (string)$client_id) &&
+				password_verify((string)$client_secret, $expectedSecretHash)) {
 
 				if (array_key_exists ("grant_type", $_POST)) {
 					switch ($_POST['grant_type']) {

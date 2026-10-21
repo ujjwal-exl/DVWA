@@ -36,6 +36,9 @@ class Token {
 		$value = $bits[2];
 		$iv = $bits[1];
 		$tag = $bits[0];
+		if (strlen ($tag) !== 16 || strlen ($iv) !== openssl_cipher_iv_length(self::ENCRYPTION_CIPHER)) {
+			return false;
+		}
 		$cleartext = openssl_decrypt($value, self::ENCRYPTION_CIPHER, self::ENCRYPTION_KEY, $options=0, $iv, $tag);
 		return $cleartext;
 	}

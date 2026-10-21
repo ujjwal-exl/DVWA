@@ -1,10 +1,10 @@
 <?php
 
 if (array_key_exists ("redirect", $_GET) && $_GET['redirect'] != "") {
-	if (preg_match ("/http:\/\/|https:\/\//i", $_GET['redirect'])) {
+	if (!preg_match ("#^/(?![/\\\\])[^\\\\]*$#D", $_GET['redirect'])) {
 		http_response_code (500);
 		?>
-		<p>Absolute URLs not allowed.</p>
+		<p>Only local paths are allowed.</p>
 		<?php
 		exit;
 	} else {

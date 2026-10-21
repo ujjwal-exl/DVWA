@@ -10,7 +10,10 @@ $page[ 'title' ] = 'Help' . $page[ 'title_separator' ].$page[ 'title' ];
 
 if (array_key_exists ("id", $_GET) &&
 	array_key_exists ("security", $_GET) &&
-	array_key_exists ("locale", $_GET)) {
+	array_key_exists ("locale", $_GET) &&
+	preg_match ('/^[a-zA-Z0-9_]+$/', $_GET[ 'id' ]) &&
+	preg_match ('/^[a-zA-Z0-9_]+$/', $_GET[ 'locale' ]) &&
+	is_dir( DVWA_WEB_PAGE_TO_ROOT . "vulnerabilities/" . $_GET[ 'id' ] . "/help" )) {
 	$id       = $_GET[ 'id' ];
 	$security = $_GET[ 'security' ];
 	$locale = $_GET[ 'locale' ];

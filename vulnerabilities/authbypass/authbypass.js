@@ -40,13 +40,34 @@ function populate_form() {
 		function updateTable (user) {
 			var row = table_body.insertRow(0);
 			var cell0 = row.insertCell(-1);
-			cell0.innerHTML = user['user_id'] + '<input type="hidden" id="user_id_' + user['user_id'] + '" name="user_id" value="' + user['user_id'] + '" />';
+			var uid = Number(user['user_id']);
+			cell0.textContent = String(uid);
+			var hid = document.createElement('input');
+			hid.type = 'hidden';
+			hid.id = 'user_id_' + uid;
+			hid.name = 'user_id';
+			hid.value = String(uid);
+			cell0.appendChild(hid);
 			var cell1 = row.insertCell(1);
-			cell1.innerHTML = '<input type="text" id="first_name_' + user['user_id'] + '" name="first_name" value="' + user['first_name'] + '" />';
+			var fn = document.createElement('input');
+			fn.type = 'text';
+			fn.id = 'first_name_' + uid;
+			fn.name = 'first_name';
+			fn.value = user['first_name'];
+			cell1.appendChild(fn);
 			var cell2 = row.insertCell(2);
-			cell2.innerHTML = '<input type="text" id="surname_' + user['user_id'] + '" name="surname" value="' + user['surname'] + '" />';
+			var sn = document.createElement('input');
+			sn.type = 'text';
+			sn.id = 'surname_' + uid;
+			sn.name = 'surname';
+			sn.value = user['surname'];
+			cell2.appendChild(sn);
 			var cell3 = row.insertCell(3);
-			cell3.innerHTML = '<input type="button" value="Update" onclick="submit_change(' + user['user_id'] + ')" />';
+			var btn = document.createElement('input');
+			btn.type = 'button';
+			btn.value = 'Update';
+			btn.addEventListener('click', function () { submit_change(uid); });
+			cell3.appendChild(btn);
 		}
 	};
 	xhr.send();

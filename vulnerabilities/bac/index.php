@@ -65,11 +65,11 @@ if ($log_result && mysqli_num_rows($log_result) > 0) {
         $target_user = $log['target_user'] ? $log['target_user'] : 'Non-existent User (ID: ' . $log['target_id'] . ')';
 
         $html .= "<tr>";
-        $html .= "<td>{$log['id']}</td>";
-        $html .= "<td>{$log['accessor_user']} (ID: {$log['user_id']})</td>";
-        $html .= "<td>{$target_user}</td>";
-        $html .= "<td>{$log['ip_address']}</td>";
-        $html .= "<td>{$log['timestamp']}</td>";
+        $html .= "<td>" . htmlspecialchars((string)$log['id'], ENT_QUOTES | ENT_HTML5, 'UTF-8') . "</td>";
+        $html .= "<td>" . htmlspecialchars((string)$log['accessor_user'], ENT_QUOTES | ENT_HTML5, 'UTF-8') . " (ID: " . htmlspecialchars((string)$log['user_id'], ENT_QUOTES | ENT_HTML5, 'UTF-8') . ")</td>";
+        $html .= "<td>" . htmlspecialchars((string)$target_user, ENT_QUOTES | ENT_HTML5, 'UTF-8') . "</td>";
+        $html .= "<td>" . htmlspecialchars((string)$log['ip_address'], ENT_QUOTES | ENT_HTML5, 'UTF-8') . "</td>";
+        $html .= "<td>" . htmlspecialchars((string)$log['timestamp'], ENT_QUOTES | ENT_HTML5, 'UTF-8') . "</td>";
         $html .= "</tr>";
     }
 
