@@ -7,7 +7,14 @@ use OpenApi\Attributes as OAT;
 #[OAT\Schema(required: ['token'])]
 class Token {
 	private const ENCRYPTION_CIPHER = "aes-128-gcm";
-	private const ENCRYPTION_KEY = "Paintbrush";
+
+	private static function key(): string {
+		$hex = getenv('TOKEN_ENCRYPTION_KEY');
+		if ($hex === false || strlen($hex) !== 32 || !ctype_xdigit($hex)) {
+			throw new \RuntimeException('TOKEN_ENCRYPTION_KEY must be set to 32 hex characters (16 random bytes)');
+		}
+		return hex2bin($hex);
+	}
 
     # Not sure if this is needed
     #[OAT\Property(example: "11111")]
@@ -22,7 +29,7 @@ class Token {
 	private static function encrypt($cleartext) {
 		$ivlen = openssl_cipher_iv_length(self::ENCRYPTION_CIPHER);
 		$iv = openssl_random_pseudo_bytes($ivlen);
-		$ciphertext = openssl_encrypt($cleartext, self::ENCRYPTION_CIPHER, self::ENCRYPTION_KEY, $options=0, $iv, $tag);
+		$ciphertext = openssl_encrypt($cleartext, self::ENCRYPTION_CIPHER, self::key(), $options=0, $iv, $tag);
 		$ret = base64_encode ($tag . ":::::" . $iv . ":::::" . $ciphertext);
 		return $ret;
 	}
@@ -39,7 +46,7 @@ class Token {
 		if (strlen ($tag) !== 16 || strlen ($iv) !== openssl_cipher_iv_length(self::ENCRYPTION_CIPHER)) {
 			return false;
 		}
-		$cleartext = openssl_decrypt($value, self::ENCRYPTION_CIPHER, self::ENCRYPTION_KEY, $options=0, $iv, $tag);
+		$cleartext = openssl_decrypt($value, self::ENCRYPTION_CIPHER, self::key(), $options=0, $iv, $tag);
 		return $cleartext;
 	}
 	public function create_token($secret, $expires) {

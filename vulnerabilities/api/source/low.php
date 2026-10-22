@@ -44,7 +44,7 @@ $html .= "
 	}
 
 	function get_users() {
-		const url = '" . $stripped_url . "/vulnerabilities/api/v2/user/';
+		const url = " . json_encode($stripped_url . '/vulnerabilities/api/v2/user/', JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP) . ";
 		 
 		fetch(url, { 
 				method: 'GET',

@@ -29,9 +29,10 @@ if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '1' ) ) {
 				<pre><br />You passed the CAPTCHA! Click the button to confirm your changes.<br /></pre>
 				<form action=\"#\" method=\"POST\">
 					<input type=\"hidden\" name=\"step\" value=\"2\" />
-					<input type=\"hidden\" name=\"password_new\" value=\"{$pass_new}\" />
-					<input type=\"hidden\" name=\"password_conf\" value=\"{$pass_conf}\" />
+					<input type=\"hidden\" name=\"password_new\" value=\"" . htmlspecialchars( $pass_new, ENT_QUOTES, 'UTF-8' ) . "\" />
+					<input type=\"hidden\" name=\"password_conf\" value=\"" . htmlspecialchars( $pass_conf, ENT_QUOTES, 'UTF-8' ) . "\" />
 					<input type=\"submit\" name=\"Change\" value=\"Change\" />
+					" . tokenField() . "
 				</form>";
 		}
 		else {
@@ -43,6 +44,9 @@ if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '1' ) ) {
 }
 
 if( isset( $_POST[ 'Change' ] ) && ( $_POST[ 'step' ] == '2' ) ) {
+	// Check Anti-CSRF token
+	checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' );
+
 	// Hide the CAPTCHA form
 	$hide_form = true;
 
