@@ -36,11 +36,17 @@ if( isset( $_POST[ 'Submit' ]  ) ) {
 		case SQLITE:
 			global $sqlite_db_connection;
 			
-			$query  = "SELECT first_name, last_name FROM users WHERE user_id = $id;";
+			$query  = "SELECT first_name, last_name FROM users WHERE user_id = :id;";
 			try {
-				$results = $sqlite_db_connection->query($query);
-				$row = $results->fetchArray();
-				$exists = $row !== false;
+				$stmt = $sqlite_db_connection->prepare($query);
+				if ($stmt === false) {
+					$exists = false;
+				} else {
+					$stmt->bindValue(':id', $id, SQLITE3_INTEGER);
+					$results = $stmt->execute();
+					$row = $results->fetchArray();
+					$exists = $row !== false;
+				}
 			} catch(Exception $e) {
 				$exists = false;
 			}

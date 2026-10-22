@@ -7,7 +7,11 @@ function decrypt ($ciphertext, $key) {
 	return $e;
 }
 
-$key = "ik ben een aardbei";
+$key = getenv('CRYPTO_KEY');
+if ($key === false || strlen($key) !== 32 || !ctype_xdigit($key)) {
+	throw new RuntimeException('CRYPTO_KEY missing or not a 32-hex-character (16-byte) AES-128 key');
+}
+$key = hex2bin($key);
 
 $errors = "";
 $success = "";

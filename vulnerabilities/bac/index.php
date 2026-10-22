@@ -47,15 +47,24 @@ $html = '';
 $html .= "<div class='log-container'>";
 $html .= "<h3>Access Log</h3>";
 
-// Get logs from the bac_log table
+// Get logs from the bac_log table, scoped to the authenticated user's own entries
+$current_user = dvwaCurrentUser();
 $log_query = "SELECT l.id, l.user_id, l.target_id, l.ip_address, l.timestamp, 
                  u1.user as accessor_user, u2.user as target_user 
                  FROM bac_log l 
                  LEFT JOIN users u1 ON l.user_id = u1.user_id 
                  LEFT JOIN users u2 ON l.target_id = u2.user_id 
+                 WHERE u1.user = ? 
                  ORDER BY l.timestamp DESC LIMIT 50";
 
-$log_result = mysqli_query($GLOBALS["___mysqli_ston"], $log_query);
+$log_result = false;
+$log_stmt = mysqli_prepare($GLOBALS["___mysqli_ston"], $log_query);
+if ($log_stmt) {
+    mysqli_stmt_bind_param($log_stmt, 's', $current_user);
+    if (mysqli_stmt_execute($log_stmt)) {
+        $log_result = mysqli_stmt_get_result($log_stmt);
+    }
+}
 
 if ($log_result && mysqli_num_rows($log_result) > 0) {
     $html .= "<table class='log-table'>";
